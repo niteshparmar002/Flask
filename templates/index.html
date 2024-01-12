@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% include "header.html" %}
+{% block title %}Flask Project with Database{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron p-3">
+                <h2>
+                    <b>Employees</b>
+                    <button type="button" class="btn btn-success float-end" data-bs-toggle="modal" 
+                        data-bs-target="#mymodal">
+                        Add new Employees
+                    </button>
+                </h2>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-success alert-dismissable" style="display: flex; justify-content: space-between;" role="alert">
+                                <p>{{message}}</p>
+                                <button type="button" class="close" data-bs-dismiss="alert" aria-label="close">
+                                    <span aria-hidden="true">x</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <form action="{{ url_for('Index') }}" method="GET" class="mb-3 col-md-4 offset-md-3">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" placeholder="Search employees">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
+                <table class="table table-hover table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for i in employees.items %}
+                    <tr>
+                        <td>{{ (employees.page - 1) * employees.per_page + loop.index }}</td>
+                        <td>{{i.name}}</td>
+                        <td>{{i.email}}</td>
+                        <td>{{i.phone}}</td>
+                        <td>
+                            <a href="/update/{{i.id}}" class="btn btn-warning btn-xs" data-bs-toggle="modal" data-bs-target="#modaledit{{i.id}}">Edit</a>
+                            <a href="/delete/{{i.id}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure To Delete ?')">Delete</a>
+                        </td>
+                    </tr>
+                    <div id="modaledit{{i.id}}" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Update Employee</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{url_for('Update')}}" method="post">
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">Name</label>
+                                            <input type="text" name="name" class="form-control" value="{{i.name}}" required="1">
+                                            <input type="hidden" name="id" class="form-control" value="{{i.id}}" required="1">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" name="email" class="form-control" value="{{i.email}}" required="1">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="phone" class="form-label">Phone</label>
+                                            <input type="phone" name="phone" class="form-control" value="{{i.phone}}" required="1">
+                                        </div>
+                                        <div class="mb-3">
+                                            <button class="btn btn-primary" type="submit">Update Employee</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </table>
+            </div>
+            {% include "pagination.html" %}
+            <div id="mymodal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add Employee</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{url_for('Insert')}}" method="post">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" name="name" id="name" class="form-control" required="1">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" name="email" id="email" class="form-control" required="1">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="phone" name="phone" id="phone" class="form-control" required="1">
+                                </div>
+                                <div class="mb-3">
+                                    <button class="btn btn-primary" type="submit">Add Employee</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
