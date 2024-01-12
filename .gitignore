@@ -1,0 +1,18 @@
+# Flask
+__pycache__/
+*.pyc
+*~
+__pycache__
+*migrations/
+*.sqlite3
+*media/
+static/
+.vscode/
+db.json
+db.sqlite3
+
+# Environments
+.env
+.flaskenv
+env/
+flaskenv/
