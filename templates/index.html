@@ -27,7 +27,7 @@
                 {% endwith %}
                 <form action="{{ url_for('Index') }}" method="GET" class="mb-3 col-md-4 offset-md-3">
                     <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="Search employees">
+                        <input type="text" name="search" class="form-control" id="queryParamsInput" placeholder="Search employees">
                         <button type="submit" class="btn btn-primary">Search</button>
                     </div>
                 </form>
@@ -121,3 +121,19 @@
     </div>
 </div>
 {% endblock %}
+{% block js %}
+<script>
+        function getQueryParams() {
+            const url = window.location.href;
+            const queryParams = new URLSearchParams(url.split('?search=')[1]);
+            const paramsArray = Array.from(queryParams.entries());
+            const paramsString = paramsArray.map(param => `${param[0]}`).join(', ');
+            return paramsString;
+        }
+        function setQueryParamInput() {
+            const queryParamsInput = document.getElementById('queryParamsInput');
+            queryParamsInput.value = getQueryParams();
+        }
+        window.onload = setQueryParamInput;
+    </script>
+{% endblock  %}

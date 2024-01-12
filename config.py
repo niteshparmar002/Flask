@@ -27,14 +27,23 @@ class User(db.Model):
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
     phone = db.Column(db.String(100))
+    profiles = db.relationship('Profile', backref='user', lazy=True)
 
     def __repr__(self):
         return f"User('{self.name}')"
-    
+
     def __init__(self, name, email, phone):
         self.name = name
         self.email = email
         self.phone = phone
+
+class Profile(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    name = db.Column(db.String(100))
+
+    def __repr__(self):
+        return f"Profile('{self.name}')"
 
 # Create the database and tables
 with app.app_context():
